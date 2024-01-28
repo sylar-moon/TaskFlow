@@ -2,11 +2,14 @@ package com.group.service;
 
 import com.group.dto.TaskDTO;
 import com.group.entity.TaskEntity;
+import com.group.enumeration.StateEnum;
 import com.group.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -19,11 +22,7 @@ public class TaskService {
 
     public TaskDTO getTaskById (long id){
         Optional<TaskEntity> task = taskRepository.findById(id);
-        if(task.isPresent()){
-            TaskEntity taskEntity = task.get();
-            return  getTaskDTO(taskEntity);
-        }
-      return null;
+        return task.map(TaskService::getTaskDTO).orElse(null);
     }
 
 
@@ -33,10 +32,24 @@ public class TaskService {
         return getTaskDTO(task);
     }
 
-    public TaskDTO getTaskDTO(TaskEntity taskEntity){
+    public static TaskDTO getTaskDTO(TaskEntity taskEntity){
         return new TaskDTO(taskEntity.getId(),
                 taskEntity.getName(),
-                taskEntity.getDateTimeCreate(),
                 taskEntity.getState());
+    }
+
+    public List<TaskDTO> getAllTasks() {
+
+       return taskRepository.findAll().stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
+    }
+
+    public TaskDTO changeTaskState(Long id, StateEnum taskState) {
+        TaskEntity entity = taskRepository.findById(id).orElse(null);
+        if(entity!=null){
+            entity.setState(taskState);
+            taskRepository.save(entity);
+            return getTaskDTO(entity);
+        }
+     return null;
     }
 }

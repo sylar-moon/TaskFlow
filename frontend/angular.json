@@ -65,7 +65,10 @@
               "buildTarget": "frontend:build:production"
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "frontend:build:development",
+              "ssl":true,
+              "sslKey": "src/assets/ssl/server-key-pkcs8.pem",
+              "sslCert": "src/assets/ssl/server-cert.pem"
             }
           },
           "defaultConfiguration": "development"
