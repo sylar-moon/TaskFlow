@@ -1,0 +1,80 @@
+
+.firstLine{
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.card{
+    margin: 20px;
+    display: grid;
+    place-items: center;
+    height: 120px;
+    width: 200px;
+    padding: 10px ;
+    border: 1px solid black; /* Правильный порядок: ширина, стиль, цвет */
+    border-radius: 10px;
+}
+
+
+
+.info{
+    border: 1px solid black; 
+    width: 400px;
+    display: block;
+    margin: 0;
+    text-align: left;
+}
+
+.name{
+    margin-left: 10px;
+    font-size: 30px;
+    font-style: italic;
+    color: blue;
+}
+
+.button{
+    border-color: aqua;
+    border-radius: 5px;
+    font-size: 20px;
+    display: block; margin-top: 10px; 
+}
+
+.nameState{
+    text-align: center;
+    font-size: 25px;
+    font-style: italic;
+    color: cornflowerblue;
+}
+
+.allTask{
+display: flex;
+
+}
+
+.tasks  {
+    height: 350px;
+    width: 550px;
+    border: 1px solid coral; 
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background-color: lemonchiffon;
+  }
+
+.allTask li {
+    border: 1px solid coral; 
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px; 
+  }
+
+  .choseState {
+    margin-left: auto;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  
