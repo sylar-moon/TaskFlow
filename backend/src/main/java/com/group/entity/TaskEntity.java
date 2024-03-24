@@ -23,10 +23,13 @@ public class TaskEntity {
 
     private LocalDateTime dateTimeCreate;
 
-    public TaskEntity(String name) {
+    private long personId;
+
+    public TaskEntity(String name,long personId) {
         this.name = name;
         this.state=StateEnum.NEW;
         dateTimeCreate=LocalDateTime.now();
+        this.personId=personId;
     }
 
     public TaskEntity() {
@@ -36,12 +39,12 @@ public class TaskEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskEntity that = (TaskEntity) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(state, that.state) && Objects.equals(dateTimeCreate, that.dateTimeCreate);
+        TaskEntity task = (TaskEntity) o;
+        return id == task.id && personId == task.personId && Objects.equals(name, task.name) && state == task.state && Objects.equals(dateTimeCreate, task.dateTimeCreate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, state, dateTimeCreate);
+        return Objects.hash(id, name, state, dateTimeCreate, personId);
     }
 }

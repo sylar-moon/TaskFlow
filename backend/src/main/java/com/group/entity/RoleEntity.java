@@ -17,10 +17,6 @@ public class RoleEntity {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "person_id")
-    private PersonEntity person;
-
     public RoleEntity(String name) {
         this.name = name;
     }
