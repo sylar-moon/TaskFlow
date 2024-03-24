@@ -5,6 +5,7 @@ import com.group.entity.PersonEntity;
 import com.group.repository.PersonRepository;
 import com.group.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PersonService implements UserDetailsService {
 
     private final PersonRepository personRepository;
@@ -46,12 +48,12 @@ public class PersonService implements UserDetailsService {
                 person.getEmail());
     }
 
-    public Long getAuthUserId() {
+    public PersonEntity getAuthPersonEntity() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            return personRepository.findByName(username).orElseThrow(() -> new UsernameNotFoundException(
-                    String.format("User %s not found!", username))).getId();
+            String email = authentication.getName();
+            return personRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(
+                    String.format("User %s not found!", email)));
         } else {
             throw new BadCredentialsException("This user is not Authenticated");
         }

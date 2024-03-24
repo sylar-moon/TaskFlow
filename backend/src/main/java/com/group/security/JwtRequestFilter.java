@@ -39,13 +39,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } else {
             jwt = authHeader.substring(7);
         }
-        log.info(authHeader);
 
 
         if (jwt != null) {
-            log.info(authHeader);
             try {
-                log.info(jwt);
                 mail = jwtTokenUtil.getMail(jwt);
             } catch (ExpiredJwtException e) {
                 log.debug("Token lifetime has expired");
