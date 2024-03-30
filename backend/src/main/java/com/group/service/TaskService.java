@@ -4,7 +4,9 @@ import com.group.dto.TaskDTO;
 import com.group.entity.TaskEntity;
 import com.group.enumeration.StateEnum;
 import com.group.exception.TaskNotFoundException;
+import com.group.exception.TaskValidateException;
 import com.group.repository.TaskRepository;
+import com.group.util.TaskStateValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,10 +22,12 @@ import java.util.stream.Collectors;
 public class TaskService {
     private final TaskRepository taskRepository;
 
+    private final TaskStateValidator stateValidator;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator) {
         this.taskRepository = taskRepository;
+        this.stateValidator=stateValidator;
     }
 
 
@@ -44,14 +48,18 @@ public class TaskService {
         return taskRepository.findAll().stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
     }
 
-    public TaskDTO changeTaskState(Long id, StateEnum taskState)  {
+    public TaskDTO changeTaskState(Long id, StateEnum targetState) {
         TaskEntity entity = tryGetTaskEntity(id);
-        if (entity != null) {
-            entity.setState(taskState);
+        StateEnum currentState = entity.getState();
+        if(stateValidator.validateTaskState(currentState,targetState)){
+            entity.setState(targetState);
             taskRepository.save(entity);
             return getTaskDTO(entity);
+        }else {
+            throw new TaskValidateException(String.format("Cannot change task status from %s to %s",currentState,targetState));
         }
-        return null;
+
+
     }
 
 
@@ -61,12 +69,12 @@ public class TaskService {
         return tasks.stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
     }
 
-    public TaskDTO getTaskById(long id)  {
+    public TaskDTO getTaskById(long id) {
         return new TaskDTO(tryGetTaskEntity(id));
     }
 
 
-    private TaskEntity tryGetTaskEntity(Long id)  {
+    private TaskEntity tryGetTaskEntity(Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(
                         String.format("Task with id %d was not found", id)));

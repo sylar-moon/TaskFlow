@@ -20,6 +20,14 @@ public class GlobalExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    @ExceptionHandler(TaskValidateException.class)
+    public ResponseEntity<AppException> handleValidateException(TaskValidateException e){
+        logger.error(e.getMessage(),e);
+        return new ResponseEntity<>(new AppException(HttpStatus.BAD_REQUEST.value(),
+                e.getMessage()),HttpStatus.BAD_REQUEST);
+    }
+
+
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<AppException> handleTaskNotFoundException(TaskNotFoundException e){
         logger.error(e.getMessage(),e);
