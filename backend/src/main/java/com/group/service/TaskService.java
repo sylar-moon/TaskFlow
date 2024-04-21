@@ -27,7 +27,7 @@ public class TaskService {
     @Autowired
     public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator) {
         this.taskRepository = taskRepository;
-        this.stateValidator=stateValidator;
+        this.stateValidator = stateValidator;
     }
 
 
@@ -44,22 +44,19 @@ public class TaskService {
     }
 
     public List<TaskDTO> getAllTasks() {
-
         return taskRepository.findAll().stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
     }
 
     public TaskDTO changeTaskState(Long id, StateEnum targetState) {
         TaskEntity entity = tryGetTaskEntity(id);
         StateEnum currentState = entity.getState();
-        if(stateValidator.validateTaskState(currentState,targetState)){
+        if (stateValidator.validateTaskState(currentState, targetState)) {
             entity.setState(targetState);
             taskRepository.save(entity);
             return getTaskDTO(entity);
-        }else {
-            throw new TaskValidateException(String.format("Cannot change task status from %s to %s",currentState,targetState));
+        } else {
+            throw new TaskValidateException(String.format("Cannot change task status from %s to %s", currentState, targetState));
         }
-
-
     }
 
 

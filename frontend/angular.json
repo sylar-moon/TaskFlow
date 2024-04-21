@@ -25,6 +25,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -66,9 +67,7 @@
             },
             "development": {
               "buildTarget": "frontend:build:development",
-              "ssl":true,
-              "sslKey": "src/assets/ssl/server-key-pkcs8.pem",
-              "sslCert": "src/assets/ssl/server-cert.pem"
+              "ssl":false
             }
           },
           "defaultConfiguration": "development"
@@ -92,6 +91,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []

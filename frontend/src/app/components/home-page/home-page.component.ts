@@ -5,6 +5,7 @@ import { response } from 'express';
 import { FormsModule } from '@angular/forms';
 import { Task } from '../../models/task.model';
 import { StateEnum } from '../../enums/state.enum';
+import { log } from 'console';
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -62,7 +63,14 @@ export class HomePageComponent implements OnInit {
 
   addNewName(input: HTMLInputElement): void {
 
-    this.http.post<any>("https://localhost:5000/api/tasks", this.newName).subscribe(
+    const userData = {
+      name: this.newName
+      
+    };
+    console.log(this.newName+"- this new task");
+    
+
+    this.http.post<any>("http://localhost:7000/api/tasks", userData).subscribe(
       (response: any) => {
         this.name = response.name;
         this.idName = response.id;
@@ -80,7 +88,7 @@ export class HomePageComponent implements OnInit {
 
   getName(input: HTMLInputElement): void {
     if (this.numberGetName != null) {
-      this.http.get<any>("https://localhost:5000/api/tasks/" + this.numberGetName).subscribe(
+      this.http.get<any>("http://localhost:7000/api/tasks/" + this.numberGetName).subscribe(
 
         (response: any) => {
           this.name = response.name;
@@ -88,9 +96,6 @@ export class HomePageComponent implements OnInit {
           this.disableId = true;
           input.value = "";
         }
-
-
-
       )
 
         ;
@@ -100,7 +105,7 @@ export class HomePageComponent implements OnInit {
 
   getAllTasks(): void {
 
-    this.http.get<any>("https://localhost:5000/api/tasks").subscribe(
+    this.http.get<any>("http://localhost:7000/api/tasks").subscribe(
 
       (response) => {
         if (response) {
@@ -129,27 +134,27 @@ export class HomePageComponent implements OnInit {
         }
       }
     )
- 
+
       ;
   }
 
 
-  updateTaskStatus(id:number): void {
+  updateTaskStatus(id: number): void {
     const newStatus = this.selectedStatus[id];
-      console.log("your id"+id);
-      console.log("your new status"+newStatus);
-      
-    this.http.patch<any>("https://localhost:5000/api/tasks/" + id + "?taskState=" + newStatus,"").subscribe(
+    console.log("your id" + id);
+    console.log("your new status" + newStatus);
 
-        (response: any) => {
-          console.log("your new id"+response.id);
-      console.log("your new status"+response.status);
-          this.name = response.name;
-          this.idName = response.id;
-          this.getAllTasks();
-        }
-      )
-        ;
+    this.http.patch<any>("http://localhost:7000/api/tasks/" + id + "?taskState=" + newStatus, "").subscribe(
+
+      (response: any) => {
+        console.log("your new id" + response.id);
+        console.log("your new status" + response.status);
+        this.name = response.name;
+        this.idName = response.id;
+        this.getAllTasks();
+      }
+    )
+      ;
   }
 
   changeDisable(): void {
