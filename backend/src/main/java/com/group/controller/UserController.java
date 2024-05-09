@@ -1,11 +1,11 @@
 package com.group.controller;
 
-import com.group.entity.PersonEntity;
+import com.group.dto.UserInfoDTO;
+import com.group.security.CustomUserDetails;
 import com.group.service.PersonService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +14,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin
 public class UserController {
 
     PersonService personService;
@@ -23,8 +24,14 @@ public class UserController {
         this.personService = personService;
     }
 
+
     @GetMapping
-    public ResponseEntity<String> getMyName(Principal principal){
-        return ResponseEntity.ok(principal.getName());
+    public ResponseEntity<UserInfoDTO> getMeInfo(Principal principal){
+        CustomUserDetails userDetails = personService.loadUserByUsername(principal.getName());
+        return ResponseEntity.ok(new UserInfoDTO(userDetails.getUsername(),
+                userDetails.getMail(),
+                userDetails.getUserPic(),
+                userDetails.getAuthorities()
+                ));
     }
 }

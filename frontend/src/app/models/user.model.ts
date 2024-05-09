@@ -1,21 +1,18 @@
+
 import { StateEnum } from "../enums/state.enum";
 
-
 export class User {
-    id!: number;
-    email!: string;
     name!: string;
-    profilePictureUrl!: string;
-    roles!: string[];
+    email!: string;
+    profilePictureUrl!: string | null;
+    roles!: string[] | null;
 
     constructor(
-        _id: number,
-        _email: string,
         _name: string,
-        _profilePictureUrl: string,
-        _roles: string[],
+        _email: string,
+        _profilePictureUrl: string | null,
+        _roles: string[] | null,
     ) {
-        this.id = _id;
         this.email = _email;
         this.name = _name;
         this.profilePictureUrl = _profilePictureUrl;
@@ -23,29 +20,30 @@ export class User {
     }
 
     static empty(): User {
-        return new User(0, '', '',  '', []);
-      }
+        return new User('', '',  null, null);
+    }
     
-      update(user: User): User {
+    update(user: User): User {
         if (user) {
-          this.id = user.id;
-          this.email = user.email;
-          this.name =user.name;
-          this.profilePictureUrl =user.profilePictureUrl;
+          this.name = user.name || '';
+          this.email = user.email || '';
+          this.profilePictureUrl = user.profilePictureUrl;
           this.roles = user.roles;  
           return this;
         }
         return User.empty();
-      }
-    
+    }
 
     static fromJson(json: any): User {
-        return new User(
-            json.id,
-            json.email,
-            json.name,
-            json.profilePictureUrl,
-            json.roles
-        );
+        if (json && json.name && json.email) {
+            return new User(
+                json.name,
+                json.email,
+                json.profilePictureUrl || null,
+                json.roles || null
+            );
+        } else {
+            return User.empty();
+        }
     }
 }

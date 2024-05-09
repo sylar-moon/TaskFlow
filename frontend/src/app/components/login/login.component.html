@@ -24,14 +24,14 @@
             <mat-error *ngIf="emailControl.hasError('password')">Неверный формат password</mat-error>
         </mat-form-field>
 
-        <div><button mat-button class = "button" *ngIf="isRegister" (click)="registerUser()">Зарегистрироваться</button>
-        <div><button mat-button class = "buttonLogin" *ngIf="!isRegister" (click)="loginUser()">Войти</button>
+        <div><button mat-button class = "button" *ngIf="isRegister" (click)="registerUser()">Create Account</button>
+        <div><button mat-button class = "buttonLogin" *ngIf="!isRegister" (click)="loginUser()">Sing in</button>
            
 
         </div>
         </div>
         <div class="isRegister">
-            <p class="smallText">Хочете зарегестрироваться?</p>
+            <p class="smallText">Do you want to register?</p>
                     <input class="checkBox" type="checkbox" [(ngModel)]="isRegister" />
         </div>  
 

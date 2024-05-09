@@ -56,7 +56,7 @@ public class AuthService {
 
     public void registrationNewPerson(UserRegistrationDTO dto) {
         personService.saveNewPerson(new UserRegistrationDTO(dto.userName(),
-                dto.email(), passwordEncoder.encode(dto.password())));
+                dto.email(), passwordEncoder.encode(dto.password()),null));
     }
 
     public TokenDTO getToken(String email) {

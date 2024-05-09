@@ -1,5 +1,5 @@
 <div class="page">
-
+<!-- 
     <div class="firstLine">
        <div class="card">
 <p class="text">Add new name</p>
@@ -19,7 +19,7 @@
 <input type="number" (input)="changeIdGetName($event)" [(ngModel)]="numberGetName"#idInput />
 <button  class="button" (click)="getName(idInput)" [disabled]="disableId" >get</button>
 </div>
-</div>  
+</div>   -->
 
     <div class="allTask">
 
@@ -68,7 +68,7 @@
 <div class="tasks">
     <p class="nameState">Closed tasks</p>
 
-    <li  *ngFor="let item of closedTasks">{{ item.name }}
+    <li class="task" *ngFor="let item of closedTasks" (click)="openTaskDialog(item)">{{ item.name }}
         <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (change)="updateTaskStatus(item.id)">
             <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>

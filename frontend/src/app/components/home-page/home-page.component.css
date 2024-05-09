@@ -60,9 +60,14 @@ display: flex;
     border: 1px solid coral; 
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 15px;
     border-radius: 10px;
     background-color: lemonchiffon;
   }
+
+.task{
+     cursor: pointer;
+}
 
 .allTask li {
     border: 1px solid coral; 

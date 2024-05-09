@@ -1,5 +1,6 @@
 package com.group.controller;
 
+import com.group.dto.AddSubtaskDTO;
 import com.group.dto.AddTaskDTO;
 import com.group.dto.TaskDTO;
 import com.group.entity.PersonEntity;
@@ -28,7 +29,7 @@ public class TaskController {
     PersonService personService;
 
     @Autowired
-    public TaskController(TaskService taskService,PersonService personService) {
+    public TaskController(TaskService taskService, PersonService personService) {
         this.taskService = taskService;
         this.personService = personService;
     }
@@ -57,8 +58,8 @@ public class TaskController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<TaskDTO> changeTaskState(@PathVariable Long id, @RequestParam StateEnum taskState){
-        return ResponseEntity.ok(taskService.changeTaskState(id,taskState));
+    public ResponseEntity<TaskDTO> changeTaskState(@PathVariable Long id, @RequestParam StateEnum taskState) {
+        return ResponseEntity.ok(taskService.changeTaskState(id, taskState));
     }
 
 }

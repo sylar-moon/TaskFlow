@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'
+import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { response } from 'express';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Task } from '../../models/task.model';
 import { StateEnum } from '../../enums/state.enum';
+import { Task } from '../../models/task.model';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 import { log } from 'console';
+
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, MatDialogModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
@@ -28,7 +31,7 @@ export class HomePageComponent implements OnInit {
   completedTasks!: Task[];
   closedTasks!: Task[];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private dialog: MatDialog) {
 
   }
 
@@ -155,6 +158,18 @@ export class HomePageComponent implements OnInit {
       }
     )
       ;
+  }
+
+
+  openTaskDialog(task:Task):void{
+    console.log(task.name);
+    
+    const dialogRef = this.dialog.open(TaskDialogComponent,{
+      width:"1000px",
+      height:"500px"
+    })
+
+    dialogRef.componentInstance.initTask(task)
   }
 
   changeDisable(): void {

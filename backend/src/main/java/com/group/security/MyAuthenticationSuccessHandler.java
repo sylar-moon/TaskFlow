@@ -1,14 +1,19 @@
 package com.group.security;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValues;
 import com.group.dto.UserRegistrationDTO;
+import com.group.service.AuthService;
 import com.group.service.PersonService;
 import com.group.util.JwtTokenUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -18,8 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Random;
 
 @Service
+@Slf4j
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
@@ -27,12 +34,21 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     @Value("${oauth.redirect}")
     private String redirectPage;
 
-    @Autowired
-    PersonService personService;
+
+    private final PersonService personService;
+
+
+
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
+    public MyAuthenticationSuccessHandler(PersonService personService, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder) {
+        this.personService = personService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -50,9 +66,11 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             Map<String, Object> attributes = oAuth2User.getAttributes();
             String email = (String) attributes.get("email");
             String name = (String) attributes.get("name");
-            String password = "pass";
+            String password = passwordEncoder.encode("pass");
+            String userPic = (String) attributes.get("picture");
+            log.info("this is userpic ={}",userPic);
             if (!personService.isNewPerson(email)) {
-                personService.saveNewPerson(new UserRegistrationDTO(name, email, password));
+                personService.saveNewPerson(new UserRegistrationDTO(name, email, password,userPic));
             }
 
             return jwtTokenUtil.generateToken(personService.loadUserByUsername(email));
@@ -77,5 +95,6 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         response.sendRedirect(redirectUrlWithToken);
 
     }
+
 
 }

@@ -1,5 +1,5 @@
 export enum ApiUrls {
-    Me = '/api/persons/me',
-
+    Me = 'http://localhost:7000/api/user',
+    Task = 'http://localhost:7000/api/tasks'
   }
   

@@ -12,7 +12,7 @@
 
     .rightColumn{
         flex: 1;
-        background-color: cornflowerblue;
+        background-color: darkseagreen;
         align-items: center;
         justify-content: center;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -43,48 +43,48 @@
         font-style: oblique ;
         font-weight: bold;
         font-size: 30px;
-        color: rgb(36, 78, 95);
+        color: rgba(37, 37, 37, 0.801);
         cursor: default;
 
     }
 
     .textAuth{
         margin-bottom: 60px;
-        font-style: oblique ;
+        font-style: normal ;
         font-weight: bold;
         font-size: 30px;
-        color: rgb(36, 78, 95);
+        color: rgba(37, 37, 37, 0.801);
         cursor: default;
 
     }
 
     .smallText{
-        font-style: oblique ;
-        font-size: 13px;
+        font-style: normal ;
+        font-size: 14px;
         color: rgb(0, 0, 0);
         cursor: default;
 
     }
 
     .button{
-        border: 2px solid teal;/* Ширина 2px, стиль solid (сплошная линия), цвет черный */
-        padding: 5px;
-        border-radius: 5px;
+        border: 2px solid mediumseagreen;/* Ширина 2px, стиль solid (сплошная линия), цвет черный */
+        padding: 8px;
+        border-radius: 17px;
         font-size: large;
-        background-color:darkcyan;
-        color: black;
-        font-style: italic;
+        background-color:azure;
+        color: rgba(26, 26, 26, 0.89);
+        font-weight: 550;
         cursor: pointer;
     }
 
     .buttonLogin{
-        border: 2px solid teal;/* Ширина 2px, стиль solid (сплошная линия), цвет черный */
-        padding: 5px;
-        border-radius: 5px;
+        border: 2px solid mediumseagreen;/* Ширина 2px, стиль solid (сплошная линия), цвет черный */
+        padding: 8px;
+        border-radius: 17px;
         font-size: large;
-        background-color:darkcyan;
-        color: black;
-        font-style: italic;
+        background-color:azure;
+        color: rgba(26, 26, 26, 0.89);
+        font-weight: 550;
         cursor: pointer;
         margin-top: 48px;
     }

@@ -45,7 +45,9 @@ public class PersonService implements UserDetailsService {
                 person.getName(),
                 person.getPassword(),
                 person.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()),
-                person.getEmail());
+                person.getEmail(),
+                person.getUserPic())
+        ;
     }
 
     public PersonEntity getAuthPersonEntity() {
@@ -68,6 +70,6 @@ public class PersonService implements UserDetailsService {
         personRepository.save(new PersonEntity(dto.userName(),
                 dto.password(),
                 dto.email(),
-                Set.of(roleService.getUserRole())));
+                Set.of(roleService.getUserRole()), dto.userPic()));
     }
 }

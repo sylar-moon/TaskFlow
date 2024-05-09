@@ -38,6 +38,9 @@ public class PersonEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
+    @NotBlank
+    private String userPic;
+
     public PersonEntity() {
     }
 
@@ -48,16 +51,25 @@ public class PersonEntity {
         this.roles = roles;
     }
 
+
+    public PersonEntity(String name, String password, String email, Set<RoleEntity> roles,String userPic) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+        this.userPic=userPic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PersonEntity that = (PersonEntity) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
+        PersonEntity person = (PersonEntity) o;
+        return id == person.id && Objects.equals(name, person.name) && Objects.equals(password, person.password) && Objects.equals(email, person.email) && Objects.equals(roles, person.roles) && Objects.equals(userPic, person.userPic);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, password, email, roles);
+        return Objects.hash(id, name, password, email, roles, userPic);
     }
 }

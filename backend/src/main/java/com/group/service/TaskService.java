@@ -1,20 +1,22 @@
 package com.group.service;
 
+import com.group.dto.AddSubtaskDTO;
 import com.group.dto.TaskDTO;
+import com.group.entity.SubTaskEntity;
 import com.group.entity.TaskEntity;
 import com.group.enumeration.StateEnum;
 import com.group.exception.TaskNotFoundException;
 import com.group.exception.TaskValidateException;
+import com.group.repository.SubTaskRepository;
 import com.group.repository.TaskRepository;
 import com.group.util.TaskStateValidator;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,25 +24,30 @@ import java.util.stream.Collectors;
 public class TaskService {
     private final TaskRepository taskRepository;
 
+    private final SubTaskRepository subTaskRepository;
+
     private final TaskStateValidator stateValidator;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator) {
+    public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator,
+                       SubTaskRepository subTaskRepository) {
         this.taskRepository = taskRepository;
         this.stateValidator = stateValidator;
+        this.subTaskRepository = subTaskRepository;
     }
 
+    public TaskDTO saveTask (TaskEntity task){
+       return getTaskDTO(taskRepository.save(task));
+    }
 
     public TaskDTO addTask(String name, Long personId) {
-        TaskEntity task = new TaskEntity(name, personId);
-        taskRepository.save(task);
-        return getTaskDTO(task);
+        return saveTask(new TaskEntity(name, personId));
     }
 
     public static TaskDTO getTaskDTO(TaskEntity taskEntity) {
         return new TaskDTO(taskEntity.getId(),
                 taskEntity.getName(),
-                taskEntity.getState(), taskEntity.getPersonId());
+                taskEntity.getState(), taskEntity.getPersonId(), taskEntity.getSubtasks());
     }
 
     public List<TaskDTO> getAllTasks() {
@@ -52,8 +59,7 @@ public class TaskService {
         StateEnum currentState = entity.getState();
         if (stateValidator.validateTaskState(currentState, targetState)) {
             entity.setState(targetState);
-            taskRepository.save(entity);
-            return getTaskDTO(entity);
+            return saveTask(entity);
         } else {
             throw new TaskValidateException(String.format("Cannot change task status from %s to %s", currentState, targetState));
         }
@@ -71,9 +77,10 @@ public class TaskService {
     }
 
 
-    private TaskEntity tryGetTaskEntity(Long id) {
+    public TaskEntity tryGetTaskEntity(Long id) {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(
                         String.format("Task with id %d was not found", id)));
     }
+
 }

@@ -1,0 +1,46 @@
+.header{
+    margin-top: 0;
+    height: 70px;
+    background-color: darkseagreen;
+    padding: 0;
+    align-items: center;
+    display: flex;
+}
+
+.logo{
+    width: 180px;
+    padding: 5px;
+    margin: 10px;
+    margin-right: 65px;
+    border: 2px solid rgb(104, 138, 119);
+    background-color: rgba(167, 247, 203, 0.774);
+    border-radius: 15px;
+
+}
+
+.button{
+    margin-left: 24px;
+    margin-right: 24px;
+    padding: 8px;
+    font-size: 23px;
+    border: 2px solid rgb(104, 138, 119);
+    background-color: rgba(167, 247, 203, 0.774);
+    border-radius: 17px;
+    cursor: pointer;
+}
+
+.userpic {
+    width: 65px; /* Измените на желаемую ширину кружка */
+    height: 65px; /* Измените на желаемую высоту кружка */
+    border-radius: 50%; /* Делает изображение круглым */
+    overflow: hidden; /* Обрезает изображение по границам кружка */
+    margin-left: 220px;
+    border: 2px solid rgb(104, 138, 119);
+    cursor: pointer;   
+
+}
+
+.userpic img {
+    width: 100%; /* Чтобы изображение занимало всю площадь кружка */
+    height: auto; /* Автоматически определяем высоту */
+}

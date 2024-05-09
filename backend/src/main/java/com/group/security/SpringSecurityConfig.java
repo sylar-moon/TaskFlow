@@ -12,16 +12,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +29,8 @@ public class SpringSecurityConfig {
 
     private final MyAuthenticationSuccessHandler successHandler;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Value("${client.url}")
     private String clientURL;
 
@@ -43,10 +40,12 @@ public class SpringSecurityConfig {
     @Autowired
     public SpringSecurityConfig(PersonService personService,
                                 JwtRequestFilter jwtRequestFilter,
-                                MyAuthenticationSuccessHandler successHandler) {
+                                MyAuthenticationSuccessHandler successHandler,
+                                PasswordEncoder passwordEncoder) {
         this.personService = personService;
         this.jwtRequestFilter = jwtRequestFilter;
         this.successHandler=successHandler;
+        this.passwordEncoder=passwordEncoder;
     }
 
     @Bean
@@ -66,7 +65,7 @@ public class SpringSecurityConfig {
                         requestMatchers("/api//auth").permitAll().
                         requestMatchers("/api/registration").permitAll().
                         requestMatchers("/api/tasks").authenticated().
-                        requestMatchers("/api/user").hasRole("ADMIN").anyRequest().permitAll()).
+                        requestMatchers("/api/user").authenticated().anyRequest().permitAll()).
 
                 oauth2Login(oauth2 -> oauth2
                 .successHandler(successHandler)).
@@ -97,16 +96,13 @@ public class SpringSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         authenticationProvider.setUserDetailsService(personService);
 
         return authenticationProvider;
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
