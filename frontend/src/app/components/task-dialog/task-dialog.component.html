@@ -1,3 +1,16 @@
-<p>    Your task id:  {{idTask}}</p>
-<p>    Your task name:  {{nameTask}}</p>
-<p>    Your task state:  {{stateTask}}</p>
+<p class="text">    Subtasks for task:  {{nameTask}}</p>
+<div class="subtasks">
+
+
+       <button class="addSubtask" mat-mini-fab  (click)="addTask()">
+        <mat-icon>add</mat-icon>
+      </button> 
+    
+
+    <div class="subtasksInfo">
+         <li *ngFor="let item of subtasks">{{ item.name }}
+        <input class="checkBox" type="checkbox" [ngModel]="item.complete" (ngModelChange)="changeComplete(item)" />
+    </li>
+    </div>
+   
+</div>

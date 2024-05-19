@@ -7,6 +7,7 @@ import { Task } from '../../models/task.model';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 import { log } from 'console';
+import type { Subtask } from '../../models/subtask.model';
 
 
 @Component({
@@ -120,9 +121,9 @@ export class HomePageComponent implements OnInit {
           this.closedTasks = [];
           console.log(this.newTasks.length);
 
-          response.forEach((element: { id: number, name: string, state: string }) => {
+          response.forEach((element: { id: number, name: string, state: string , subtasks: Subtask[]}) => {
             const task: Task = new Task(element.id, element.name,
-              StateEnum[element.state as keyof typeof StateEnum]);
+              StateEnum[element.state as keyof typeof StateEnum],element.subtasks);
 
             switch (task.state) {
               case StateEnum.NEW: this.newTasks.push(task);
@@ -165,7 +166,7 @@ export class HomePageComponent implements OnInit {
     console.log(task.name);
     
     const dialogRef = this.dialog.open(TaskDialogComponent,{
-      width:"1000px",
+      width:"560px",
       height:"500px"
     })
 

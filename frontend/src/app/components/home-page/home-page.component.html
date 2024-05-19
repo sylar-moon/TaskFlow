@@ -26,8 +26,8 @@
 <div class="tasks">
     <p class="nameState">New tasks</p>
 
-    <li *ngFor="let item of newTasks">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (change)="updateTaskStatus(item.id)">
+    <li class="task" *ngFor="let item of newTasks" (click)="openTaskDialog(item)">{{ item.name }}
+        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
             <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
@@ -39,8 +39,8 @@
 <div class="tasks">
     <p class="nameState">In progress tasks</p>
 
-    <li  *ngFor="let item of inProgresTasks">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (change)="updateTaskStatus(item.id)">
+    <li class="task"  *ngFor="let item of inProgresTasks" (click)="openTaskDialog(item)">{{ item.name }}
+        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
             <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
@@ -54,8 +54,8 @@
 <div class="tasks">
     <p class="nameState" >Completed tasks</p>
 
-    <li  *ngFor="let item of completedTasks">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (change)="updateTaskStatus(item.id)">
+    <li class="task" *ngFor="let item of completedTasks " (click)="openTaskDialog(item)">{{ item.name }}
+        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
             <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
@@ -69,7 +69,7 @@
     <p class="nameState">Closed tasks</p>
 
     <li class="task" *ngFor="let item of closedTasks" (click)="openTaskDialog(item)">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (change)="updateTaskStatus(item.id)">
+        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
             <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>

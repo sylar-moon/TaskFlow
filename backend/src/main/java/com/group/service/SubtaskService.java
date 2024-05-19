@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 @Slf4j
 public class SubtaskService {
@@ -44,5 +47,10 @@ public class SubtaskService {
         return subTaskRepository.findById(id)
                 .orElseThrow(() -> new SubtaskNotFoundException(
                         String.format("Subtask with id %d was not found", id)));
+    }
+
+    public Set<SubTaskEntity> getSubtasksForTaskId(Long id) {
+        TaskEntity task = taskService.tryGetTaskEntity(id);
+        return task.getSubtasks();
     }
 }

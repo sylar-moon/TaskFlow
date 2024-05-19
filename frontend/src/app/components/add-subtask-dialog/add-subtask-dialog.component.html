@@ -1,0 +1,6 @@
+<p>Введите текст новой subtask</p>
+
+<input type="text" (input)="changeName($event)" #nameInput/>
+<button  class="button" (click)="addNewSubtask(nameInput)" 
+[disabled]="isEmpty" 
+>add</button>
