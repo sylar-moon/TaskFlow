@@ -1,19 +1,32 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,  ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StateEnum } from '../../enums/state.enum';
 import { Task } from '../../models/task.model';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { TaskService } from '../../sercices/task.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 import { log } from 'console';
 import type { Subtask } from '../../models/subtask.model';
+import { MatIconModule } from '@angular/material/icon';
+import { AddDialogComponent } from '../add-dialog/add-dialog.component';
 
+// import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, MatDialogModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, MatDialogModule, MatButtonModule,
+    MatIconModule, MatPaginatorModule,
+    MatTableModule, MatButtonModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
@@ -32,13 +45,25 @@ export class HomePageComponent implements OnInit {
   completedTasks!: Task[];
   closedTasks!: Task[];
 
-  constructor(private http: HttpClient,private dialog: MatDialog) {
+  newTasksDataSource = new MatTableDataSource<Task>(this.newTasks);
+  inProgresTasksDataSource = new MatTableDataSource<Task>(this.inProgresTasks);
+  completedTasksDataSource = new MatTableDataSource<Task>(this.completedTasks);
+
+  @ViewChild('newTasksPaginator') newTasksPaginator!: MatPaginator;
+  @ViewChild('inProgresTasksPaginator') inProgresTasksPaginator!: MatPaginator;
+  @ViewChild('completedTasksPaginator') completedTasksPaginator!: MatPaginator;
+
+
+  constructor(private http: HttpClient, private dialog: MatDialog, private taskService: TaskService) {
 
   }
 
 
   ngOnInit(): void {
-    this.getAllTasks();
+    this.newTasksDataSource.paginator = this.newTasksPaginator;
+    this.inProgresTasksDataSource.paginator = this.inProgresTasksPaginator;
+    this.completedTasksDataSource.paginator = this.completedTasksPaginator;
+    this.getMyTasks();
 
   }
 
@@ -69,10 +94,10 @@ export class HomePageComponent implements OnInit {
 
     const userData = {
       name: this.newName
-      
+
     };
-    console.log(this.newName+"- this new task");
-    
+    console.log(this.newName + "- this new task");
+
 
     this.http.post<any>("http://localhost:7000/api/tasks", userData).subscribe(
       (response: any) => {
@@ -81,7 +106,7 @@ export class HomePageComponent implements OnInit {
         this.newName = "";
         this.disable = true;
         input.value = "";
-        this.getAllTasks();
+        this.getMyTasks();
       },
       (error: any) => {
         // Обработка ошибок, если необходимо
@@ -107,9 +132,9 @@ export class HomePageComponent implements OnInit {
 
   }
 
-  getAllTasks(): void {
+  getMyTasks(): void {
 
-    this.http.get<any>("http://localhost:7000/api/tasks").subscribe(
+    this.http.get<any>("http://localhost:7000/api/tasks/my").subscribe(
 
       (response) => {
         if (response) {
@@ -121,9 +146,9 @@ export class HomePageComponent implements OnInit {
           this.closedTasks = [];
           console.log(this.newTasks.length);
 
-          response.forEach((element: { id: number, name: string, state: string , subtasks: Subtask[]}) => {
+          response.forEach((element: { id: number, name: string, state: string, subtasks: Subtask[] }) => {
             const task: Task = new Task(element.id, element.name,
-              StateEnum[element.state as keyof typeof StateEnum],element.subtasks);
+              StateEnum[element.state as keyof typeof StateEnum], element.subtasks);
 
             switch (task.state) {
               case StateEnum.NEW: this.newTasks.push(task);
@@ -155,19 +180,19 @@ export class HomePageComponent implements OnInit {
         console.log("your new status" + response.status);
         this.name = response.name;
         this.idName = response.id;
-        this.getAllTasks();
+        this.getMyTasks();
       }
     )
       ;
   }
 
 
-  openTaskDialog(task:Task):void{
+  openTaskDialog(task: Task): void {
     console.log(task.name);
-    
-    const dialogRef = this.dialog.open(TaskDialogComponent,{
-      width:"560px",
-      height:"500px"
+
+    const dialogRef = this.dialog.open(TaskDialogComponent, {
+      width: "560px",
+      height: "500px"
     })
 
     dialogRef.componentInstance.initTask(task)
@@ -175,5 +200,23 @@ export class HomePageComponent implements OnInit {
 
   changeDisable(): void {
     this.disable = !this.disable;
+  }
+
+  addTask(): void {
+    console.log("add task start");
+
+    // this.taskService.addNewTask().subscribe
+
+    const dialogRef = this.dialog.open(AddDialogComponent, {
+      width: "400px",
+      height: "200px"
+    })
+
+    // dialogRef.componentInstance.initTaskId(this.idTask)
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getMyTasks(); // Вызываем метод обновления подзадач после закрытия диалога
+    });
+
   }
 }

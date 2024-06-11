@@ -3,12 +3,14 @@ package com.group.util;
 import com.group.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class JwtTokenUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -32,6 +35,9 @@ public class JwtTokenUtil {
         claims.put("mail", userDetails.getMail());
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + jwtLifeTime.toMillis());
+
+
+
         try {
             return Jwts.builder().setClaims(claims).
                     setSubject(userDetails.getUsername()).

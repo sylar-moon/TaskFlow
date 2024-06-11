@@ -24,16 +24,36 @@
     <div class="allTask">
 
 <div class="tasks">
-    <p class="nameState">New tasks</p>
+    
+    <button class="addTask" mat-mini-fab  (click)="addTask()">
+        <mat-icon>add</mat-icon>
+      </button> 
+    <p class="nameStateNewTasks">New tasks</p>
 
     <li class="task" *ngFor="let item of newTasks" (click)="openTaskDialog(item)">{{ item.name }}
         <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="NEW">New</option>
             <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
             <option value="CLOSED">Closed</option>
           </select>
     </li>
+    <div>
+  <h2>New Tasks</h2>
+  <table mat-table [dataSource]="newTasksDataSource">
+    <!-- Определите колонки -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let task"> {{task.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let task"> {{task.name}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['id', 'name']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id', 'name'];"></tr>
+  </table>
+  <mat-paginator #newTasksPaginator [pageSize]="5"></mat-paginator>
+</div>
 </div>
 
 <div class="tasks">
@@ -41,8 +61,6 @@
 
     <li class="task"  *ngFor="let item of inProgresTasks" (click)="openTaskDialog(item)">{{ item.name }}
         <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="NEW">New</option>
-            <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
             <option value="CLOSED">Closed</option>
           </select>
@@ -56,16 +74,14 @@
 
     <li class="task" *ngFor="let item of completedTasks " (click)="openTaskDialog(item)">{{ item.name }}
         <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="NEW">New</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
             <option value="CLOSED">Closed</option>
           </select>
     </li>
+
 </div>
 
 
-<div class="tasks">
+<!-- <div class="tasks">
     <p class="nameState">Closed tasks</p>
 
     <li class="task" *ngFor="let item of closedTasks" (click)="openTaskDialog(item)">{{ item.name }}
@@ -76,7 +92,7 @@
             <option value="CLOSED">Closed</option>
           </select>
     </li>
-</div>
+</div> -->
 
     </div>
 

@@ -7,7 +7,7 @@ import { SubtaskService } from '../../sercices/subtask.service';
 import { response } from 'express';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AddSubtaskDialogComponent} from '../add-subtask-dialog/add-subtask-dialog.component';
+import { AddDialogComponent} from '../add-dialog/add-dialog.component';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 
 @Component({
@@ -78,7 +78,7 @@ addTask(){
  
   console.log(this.idTask+" : your id task for add subtask ");
     
-    const dialogRef = this.dialog.open(AddSubtaskDialogComponent,{
+    const dialogRef = this.dialog.open(AddDialogComponent,{
       width:"400px",
       height:"200px"
     })
@@ -86,7 +86,6 @@ addTask(){
     dialogRef.componentInstance.initTaskId(this.idTask)
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog add subtask was closed');
       this.updateSubtasks(this.idTask); // Вызываем метод обновления подзадач после закрытия диалога
     });
 }

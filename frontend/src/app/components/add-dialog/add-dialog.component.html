@@ -1,0 +1,22 @@
+<button class="close" mat-mini-fab  (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button> 
+
+<div class="text">
+    <p *ngIf="isSubtask">Enter the new subtask name</p>
+    <p *ngIf="!isSubtask">Enter the new task name</p>
+
+</div>
+
+<input class="textInput" type="text" (input)="changeName($event)" 
+(keydown.enter)="addNewTask(nameInput)" #nameInput />
+
+
+<div class="buttons">
+    <button class="button" *ngIf="!isSubtask" (click)="addNewTask(nameInput) "
+     [disabled]="isEmpty">Add task</button>
+
+    <button class="button" *ngIf="isSubtask" (click)="addNewSubtask(nameInput)" 
+    [disabled]="isEmpty">Add
+        subtask</button>
+</div>

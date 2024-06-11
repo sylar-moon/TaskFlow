@@ -1,6 +1,7 @@
 package com.group.service;
 
 import com.group.dto.AddSubtaskDTO;
+import com.group.dto.SendMessageDTO;
 import com.group.dto.TaskDTO;
 import com.group.entity.SubTaskEntity;
 import com.group.entity.TaskEntity;
@@ -28,12 +29,15 @@ public class TaskService {
 
     private final TaskStateValidator stateValidator;
 
+    private final EmailSenderService senderService;
+
     @Autowired
     public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator,
-                       SubTaskRepository subTaskRepository) {
+                       SubTaskRepository subTaskRepository, EmailSenderService senderService) {
         this.taskRepository = taskRepository;
         this.stateValidator = stateValidator;
         this.subTaskRepository = subTaskRepository;
+        this.senderService = senderService;
     }
 
     public TaskDTO saveTask (TaskEntity task){
@@ -67,8 +71,10 @@ public class TaskService {
 
 
     public List<TaskDTO> getMyTasks(long personId) {
+        log.info("your person id: {}",personId);
         List<TaskEntity> tasks = taskRepository.findAllByPersonId(personId).
                 orElse(new ArrayList<>());
+        tasks.forEach(s-> log.info("Your task: {}",s));
         return tasks.stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
     }
 

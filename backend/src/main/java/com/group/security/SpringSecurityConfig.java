@@ -15,6 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -31,6 +34,8 @@ public class SpringSecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ClientRegistrationRepository clientRegistrationRepository;
+
     @Value("${client.url}")
     private String clientURL;
 
@@ -41,11 +46,12 @@ public class SpringSecurityConfig {
     public SpringSecurityConfig(PersonService personService,
                                 JwtRequestFilter jwtRequestFilter,
                                 MyAuthenticationSuccessHandler successHandler,
-                                PasswordEncoder passwordEncoder) {
+                                PasswordEncoder passwordEncoder, ClientRegistrationRepository clientRegistrationRepository) {
         this.personService = personService;
         this.jwtRequestFilter = jwtRequestFilter;
         this.successHandler=successHandler;
         this.passwordEncoder=passwordEncoder;
+        this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
     @Bean
@@ -67,7 +73,10 @@ public class SpringSecurityConfig {
                         requestMatchers("/api/tasks").authenticated().
                         requestMatchers("/api/user").authenticated().anyRequest().permitAll()).
 
-                oauth2Login(oauth2 -> oauth2
+                oauth2Login(oauth2 -> oauth2.authorizationEndpoint(authorizationEndpoint ->
+                                authorizationEndpoint
+                                        .authorizationRequestResolver(customAuthorizationRequestResolver(clientRegistrationRepository))
+                        )
                 .successHandler(successHandler)).
 
                 requiresChannel(requiresChannel ->
@@ -79,6 +88,18 @@ public class SpringSecurityConfig {
                 ).addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+
+
+
+    @Bean
+    public DefaultOAuth2AuthorizationRequestResolver customAuthorizationRequestResolver(ClientRegistrationRepository repo) {
+        DefaultOAuth2AuthorizationRequestResolver resolver = new DefaultOAuth2AuthorizationRequestResolver(
+                repo, OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI);
+        resolver.setAuthorizationRequestCustomizer(customizer ->
+                customizer.additionalParameters(params -> params.put("prompt", "select_account")));
+        return resolver;
     }
 
 //    @Bean

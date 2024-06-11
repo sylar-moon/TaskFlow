@@ -2,10 +2,13 @@ package com.group.security;
 
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValues;
+import com.group.dto.SendMessageDTO;
 import com.group.dto.UserRegistrationDTO;
 import com.group.service.AuthService;
+import com.group.service.EmailSenderService;
 import com.group.service.PersonService;
 import com.group.util.JwtTokenUtil;
+import com.group.util.RandomStringFaker;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,16 +41,25 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     private final PersonService personService;
 
 
-
     private final JwtTokenUtil jwtTokenUtil;
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RandomStringFaker stringFaker;
+
+    private final EmailSenderService senderService;
+
     @Autowired
-    public MyAuthenticationSuccessHandler(PersonService personService, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder) {
+    public MyAuthenticationSuccessHandler(PersonService personService,
+                                          JwtTokenUtil jwtTokenUtil,
+                                          PasswordEncoder passwordEncoder,
+                                          RandomStringFaker stringFaker,
+                                          EmailSenderService senderService) {
         this.personService = personService;
         this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
+        this.stringFaker = stringFaker;
+        this.senderService = senderService;
     }
 
     @Override
@@ -66,18 +78,23 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             Map<String, Object> attributes = oAuth2User.getAttributes();
             String email = (String) attributes.get("email");
             String name = (String) attributes.get("name");
-            String password = passwordEncoder.encode("pass");
+            String rawPass = stringFaker.getFakeString();
+            String password = passwordEncoder.encode(rawPass);
             String userPic = (String) attributes.get("picture");
-            log.info("this is userpic ={}",userPic);
             if (!personService.isNewPerson(email)) {
-                personService.saveNewPerson(new UserRegistrationDTO(name, email, password,userPic));
+                personService.saveNewPerson(new UserRegistrationDTO(name, email, password, userPic));
             }
-
+            sendRawPass(rawPass, email);
             return jwtTokenUtil.generateToken(personService.loadUserByUsername(email));
 
         }
         return null;
     }
+
+    private void sendRawPass(String rawPass, String email) {
+        senderService.sendEmail(new SendMessageDTO(email,"Your new pass: "+rawPass,"This is yor new password from TaskFlow"));
+    }
+
 
     private void redirectToPage(HttpServletRequest request,
                                 HttpServletResponse response,

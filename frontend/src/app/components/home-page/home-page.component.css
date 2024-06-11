@@ -47,6 +47,16 @@
     font-size: 25px;
     font-style: italic;
     color: cornflowerblue;
+    cursor: default;
+}
+
+.nameStateNewTasks{
+    text-align: center;
+    font-size: 25px;
+    font-style: italic;
+    color: cornflowerblue;
+    cursor: default;
+    margin-top: -5px;
 }
 
 .allTask{
@@ -55,7 +65,7 @@ display: flex;
 }
 
 .tasks  {
-    height: 350px;
+    height: 450px;
     width: 550px;
     border: 1px solid coral; 
     margin-left: 10px;
@@ -67,10 +77,13 @@ display: flex;
 
 .task{
      cursor: pointer;
+     margin-left: 12px;
+     margin-right: 12px;
+     margin-bottom: 12px;
 }
 
 .allTask li {
-    border: 1px solid coral; 
+    /* border: 1px solid coral;  */
     display: flex;
     align-items: center;
     margin-bottom: 5px; 
@@ -82,4 +95,24 @@ display: flex;
     align-items: flex-end;
   }
 
-  
+
+  .addTask{
+    color: whitesmoke;
+    background-color: darkcyan;
+    display: flex;
+    margin-right: 6px;
+
+    margin-top: 6px;
+    margin-left: auto;
+    margin-bottom: 0px;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    line-height: 20px;
+}
+
+.addTask .mat-icon {
+    margin-top: 4px;
+    font-size: 20px; /* Настройте размер значка */
+  }  

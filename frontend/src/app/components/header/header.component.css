@@ -1,6 +1,6 @@
 .header{
     margin-top: 0;
-    height: 70px;
+    height: 80px;
     background-color: darkseagreen;
     padding: 0;
     align-items: center;
@@ -19,9 +19,10 @@
 }
 
 .button{
+    height: 50px;
+    padding: 8px;
     margin-left: 24px;
     margin-right: 24px;
-    padding: 8px;
     font-size: 23px;
     border: 2px solid rgb(104, 138, 119);
     background-color: rgba(167, 247, 203, 0.774);
@@ -30,11 +31,12 @@
 }
 
 .userpic {
-    width: 65px; /* Измените на желаемую ширину кружка */
-    height: 65px; /* Измените на желаемую высоту кружка */
+    width: 65px; 
+    height: 65px; 
     border-radius: 50%; /* Делает изображение круглым */
     overflow: hidden; /* Обрезает изображение по границам кружка */
-    margin-left: 220px;
+    margin-left: auto;
+    margin-right: 10px;
     border: 2px solid rgb(104, 138, 119);
     cursor: pointer;   
 
@@ -44,3 +46,10 @@
     width: 100%; /* Чтобы изображение занимало всю площадь кружка */
     height: auto; /* Автоматически определяем высоту */
 }
+
+ .buttons {
+  align-items: center;
+    display: flex;
+    margin-left: auto;
+    
+ }

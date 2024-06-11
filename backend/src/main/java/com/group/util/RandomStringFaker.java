@@ -2,9 +2,11 @@ package com.group.util;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Component
 @Slf4j
 public class RandomStringFaker {
     private final Faker faker;
