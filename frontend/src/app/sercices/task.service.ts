@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiUrls } from '../enums/api-urls.enum'
 import type { User } from '../models/user.model';
-import type { Task } from '../models/task.model';
+import { Task } from '../models/task.model';
 
 
 @Injectable({
@@ -22,9 +22,7 @@ export class TaskService {
         return this.http.post<Task>(ApiUrls.Task, userData)
     }
 
-
-
-
-
-
+    getMyTasks():Observable<any>{
+        return this.http.get<Task>(ApiUrls.MyTasks)
+    }
 }

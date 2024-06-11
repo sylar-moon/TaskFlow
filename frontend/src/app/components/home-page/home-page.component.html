@@ -36,24 +36,23 @@
             <option value="CLOSED">Closed</option>
           </select>
     </li>
-    <div>
-  <h2>New Tasks</h2>
-  <table mat-table [dataSource]="newTasksDataSource">
-    <!-- Определите колонки -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> ID </th>
-      <td mat-cell *matCellDef="let task"> {{task.id}} </td>
-    </ng-container>
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
-      <td mat-cell *matCellDef="let task"> {{task.name}} </td>
-    </ng-container>
+    
+    <div class="extended-paginator" *ngIf="totalPagesNewTask">
 
-    <tr mat-header-row *matHeaderRowDef="['id', 'name']"></tr>
-    <tr mat-row *matRowDef="let row; columns: ['id', 'name'];"></tr>
-  </table>
-  <mat-paginator #newTasksPaginator [pageSize]="5"></mat-paginator>
-</div>
+        <div class="pager">
+           {{pageNewTask + 1}} of {{totalPagesNewTask}} pages
+        </div>
+    
+        <mat-paginator class="paginator"
+                       [length]="totalNewTasks"
+                       [pageSize]="pageSizeNewTask"
+                       [pageSizeOptions]="[5, 10, 20]"
+                       [showFirstLastButtons]="true"
+                       (page)="onPageChange($event)">
+        </mat-paginator>
+    
+    </div>
+
 </div>
 
 <div class="tasks">
@@ -81,29 +80,8 @@
 </div>
 
 
-<!-- <div class="tasks">
-    <p class="nameState">Closed tasks</p>
-
-    <li class="task" *ngFor="let item of closedTasks" (click)="openTaskDialog(item)">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="NEW">New</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="CLOSED">Closed</option>
-          </select>
-    </li>
-</div> -->
 
     </div>
 
-<!-- <button class="button" (click)="changeDisable()">active button</button> -->
-<!-- <button *ngIf="disable" class="button"  (click)="changeName()"  >button</button> -->
-
-
-
-
-
-
-<!-- <button *ngIf="disable" class="button"  (click)="changeName()"  >button</button> -->
 
 </div>

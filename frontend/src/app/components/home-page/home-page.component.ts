@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit,  ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StateEnum } from '../../enums/state.enum';
 import { Task } from '../../models/task.model';
@@ -40,10 +40,14 @@ export class HomePageComponent implements OnInit {
   disableId = true;
   selectedStatus: { [key: number]: string } = {};
 
-  newTasks!: Task[];
-  inProgresTasks!: Task[];
-  completedTasks!: Task[];
-  closedTasks!: Task[];
+  newTasks: Task[] = [];
+  inProgresTasks: Task[]=[];
+  completedTasks: Task[]=[];
+
+  pageNewTask = 0;
+  totalPagesNewTask = 0;
+  pageSizeNewTask = 5;
+  totalNewTasks = 0;
 
   newTasksDataSource = new MatTableDataSource<Task>(this.newTasks);
   inProgresTasksDataSource = new MatTableDataSource<Task>(this.inProgresTasks);
@@ -134,16 +138,11 @@ export class HomePageComponent implements OnInit {
 
   getMyTasks(): void {
 
-    this.http.get<any>("http://localhost:7000/api/tasks/my").subscribe(
+    this.taskService.getMyTasks().subscribe(
 
       (response) => {
         if (response) {
 
-          this.newTasks = [];
-
-          this.inProgresTasks = [];
-          this.completedTasks = [];
-          this.closedTasks = [];
           console.log(this.newTasks.length);
 
           response.forEach((element: { id: number, name: string, state: string, subtasks: Subtask[] }) => {
@@ -156,15 +155,12 @@ export class HomePageComponent implements OnInit {
               case StateEnum.IN_PROGRESS: this.inProgresTasks.push(task);
                 break;
               case StateEnum.COMPLETED: this.completedTasks.push(task);
-                break;
-              case StateEnum.CLOSED: this.closedTasks.push(task);
             }
           });
         }
       }
-    )
+    );
 
-      ;
   }
 
 
@@ -219,4 +215,10 @@ export class HomePageComponent implements OnInit {
     });
 
   }
+
+  onPageChange(event: any): void {
+    this.pageNewTask = event.pageIndex;
+    this.pageSizeNewTask = event.pageSize;
+    this.getMyTasks();
+}
 }
