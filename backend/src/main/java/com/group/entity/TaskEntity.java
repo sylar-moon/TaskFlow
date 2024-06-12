@@ -17,7 +17,8 @@ import java.util.Set;
 @Table(name = "tasks")
 public class TaskEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "task_seq")
+    @SequenceGenerator(name = "task_seq", sequenceName = "tasks_seq", allocationSize = 1)
     private long id;
 
     private String name;

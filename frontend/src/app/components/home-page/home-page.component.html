@@ -1,87 +1,86 @@
 <div class="page">
-<!-- 
-    <div class="firstLine">
-       <div class="card">
-<p class="text">Add new name</p>
-<input type="text" (input)="changeName($event)" #nameInput/>
-<button  class="button" (click)="addNewName(nameInput)" [disabled]="disable" >add</button>
-    </div>
-
-<div class="info">
-    <p class="name">name task: {{name}}</p>
-<p class="name">id task: {{idName}}</p>
-</div>
-
-
-<div class="card">
-    <p class = "text">Get name for id</p>
-
-<input type="number" (input)="changeIdGetName($event)" [(ngModel)]="numberGetName"#idInput />
-<button  class="button" (click)="getName(idInput)" [disabled]="disableId" >get</button>
-</div>
-</div>   -->
 
     <div class="allTask">
 
-<div class="tasks">
-    
-    <button class="addTask" mat-mini-fab  (click)="addTask()">
-        <mat-icon>add</mat-icon>
-      </button> 
-    <p class="nameStateNewTasks">New tasks</p>
+        <div class="tasksCard">
 
-    <li class="task" *ngFor="let item of newTasks" (click)="openTaskDialog(item)">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="CLOSED">Closed</option>
-          </select>
-    </li>
-    
-    <div class="extended-paginator" *ngIf="totalPagesNewTask">
+            <div class="tasks">
 
-        <div class="pager">
-           {{pageNewTask + 1}} of {{totalPagesNewTask}} pages
+
+
+                <button class="addTask" mat-mini-fab (click)="addTask()">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <p class="nameStateNewTasks">New tasks</p>
+
+                <li class="task" *ngFor="let item of paginatedNewTasks" (click)="openTaskDialog(item)">{{ item.name }}
+                    <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()"
+                        (change)="updateTaskStatus(item.id)">
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="CLOSED">Closed</option>
+                    </select>
+                </li>
+
+
+            </div>
+
+            <div class="extended-paginator"  style="margin-left: -10px;">
+                <mat-paginator class="paginator" [length]="totalNewTasks" [pageSize]="pageSizeNewTask"
+                    [pageSizeOptions]="[5, 10, 15]" [showFirstLastButtons]="false" (page)="onPageChangeNewTask($event)">
+                </mat-paginator>
+            </div>
+
+
         </div>
-    
-        <mat-paginator class="paginator"
-                       [length]="totalNewTasks"
-                       [pageSize]="pageSizeNewTask"
-                       [pageSizeOptions]="[5, 10, 20]"
-                       [showFirstLastButtons]="true"
-                       (page)="onPageChange($event)">
-        </mat-paginator>
-    
+
+        <div class="tasksCard">
+
+            <div class="tasks">
+                <p class="nameState">In progress tasks</p>
+
+                <li class="task" *ngFor="let item of paginatedInProgressTasks" (click)="openTaskDialog(item)">{{ item.name }}
+                    <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()"
+                        (change)="updateTaskStatus(item.id)">
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CLOSED">Closed</option>
+                    </select>
+                </li>
+            </div>
+
+            <div class="extended-paginator"  style="margin-left: -25px;">
+                <mat-paginator class="paginator" [length]="totalInProgressTasks" [pageSize]="pageSizeInProgressTask"
+                    [pageSizeOptions]="[5, 10, 15]" [showFirstLastButtons]="false"
+                    (page)="onPageChangeInProgressTask($event)">
+                </mat-paginator>
+            </div>
+
+
+        </div>
+
+
+        <div class="tasksCard">
+
+            <div class="tasks">
+                <p class="nameState">Completed tasks</p>
+
+                <li class="task" *ngFor="let item of paginatedCompletedTasks " (click)="openTaskDialog(item)">{{ item.name }}
+                    <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()"
+                        (change)="updateTaskStatus(item.id)">
+                        <option value="CLOSED">Closed</option>
+                    </select>
+                </li>
+
+            </div>
+
+            <div class="extended-paginator" style="margin-left: -103px;">
+                <mat-paginator class="paginator" style="max-width: 400px" [length]="totalCompletedTasks"
+                    [pageSize]="pageSizeCompletedTask" [pageSizeOptions]="[5, 10, 15]" [showFirstLastButtons]="false"
+                    (page)="onPageChangeCompletedTask($event)">
+                </mat-paginator>
+            </div>
+
+        </div>
+
     </div>
-
-</div>
-
-<div class="tasks">
-    <p class="nameState">In progress tasks</p>
-
-    <li class="task"  *ngFor="let item of inProgresTasks" (click)="openTaskDialog(item)">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="COMPLETED">Completed</option>
-            <option value="CLOSED">Closed</option>
-          </select>
-    </li>
-</div>
-
-
-
-<div class="tasks">
-    <p class="nameState" >Completed tasks</p>
-
-    <li class="task" *ngFor="let item of completedTasks " (click)="openTaskDialog(item)">{{ item.name }}
-        <select class="choseState" [(ngModel)]="selectedStatus[item.id]" (click)="$event.stopPropagation()" (change)="updateTaskStatus(item.id)">
-            <option value="CLOSED">Closed</option>
-          </select>
-    </li>
-
-</div>
-
-
-
-    </div>
-
 
 </div>

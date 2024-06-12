@@ -12,7 +12,8 @@ import java.util.Objects;
 @Table(name = "roles")
 public class RoleEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
+    @SequenceGenerator(name = "role_seq", sequenceName = "roles_seq", allocationSize = 1)
     private Long id;
 
     private String name;

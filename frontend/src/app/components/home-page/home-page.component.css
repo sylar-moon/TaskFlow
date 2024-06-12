@@ -66,7 +66,8 @@ display: flex;
 
 .tasks  {
     height: 450px;
-    width: 550px;
+   min-width: 350px;
+   max-width: 620px;
     border: 1px solid coral; 
     margin-left: 10px;
     margin-right: 10px;
@@ -116,3 +117,32 @@ display: flex;
     margin-top: 4px;
     font-size: 20px; /* Настройте размер значка */
   }  
+
+
+  .tasksCard{
+    display: table;
+    align-items: end;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* .tasksCard .extended-paginator .paginator {
+    width: 550px !important;
+} */
+::ng-deep .paginator {
+    max-width: 320px;
+    font-size: 12px;
+    
+  }
+  
+  ::ng-deep .mat-mdc-paginator-page-size-label {
+    display: none;
+  }
+
+ ::ng-deep .mat-mdc-paginator-page-size{
+    
+   width: 66px;
+ }
+  
+
+ 
