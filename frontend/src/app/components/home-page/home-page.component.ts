@@ -21,13 +21,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { SortedEnum } from '../../enums/sorted.enum';
+
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [CommonModule, HttpClientModule, FormsModule, MatDialogModule, MatButtonModule,
     MatIconModule, MatPaginatorModule,
-    MatTableModule, MatButtonModule],
+    MatTableModule, MatButtonModule, MatMenuModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
@@ -35,8 +38,8 @@ import { Observable } from 'rxjs';
 export class HomePageComponent implements OnInit {
   name = "";
   idName!: number;
-  newName = "";
-  numberGetName!: number;
+  sorted = SortedEnum.DATE_DOWN;
+
   disable = true;
   disableId = true;
   selectedStatus: { [key: number]: string } = {};
@@ -72,11 +75,17 @@ export class HomePageComponent implements OnInit {
 
 
   constructor(private http: HttpClient, private dialog: MatDialog, private taskService: TaskService) {
-    this.refreshTasks();
+    console.log("your sort = " + this.sorted);
+
+    this.refreshTasks(this.sorted);
   }
 
-  refreshTasks(): void {
-    this.getMyTasks().subscribe((response) => {
+  refreshTasks(selectedSort: SortedEnum): void {
+    console.log("your select sort = " + selectedSort);
+
+    this.sorted = selectedSort;
+
+    this.getMyTasks(this.sorted).subscribe((response) => {
       this.updatePaginatedNewTasks();
       this.updatePaginatedInProgressTasks();
       this.updatePaginatedCompletedTasks();
@@ -87,14 +96,14 @@ export class HomePageComponent implements OnInit {
   }
 
 
-  getMyTasks(): Observable<any> {
+  getMyTasks(sorted: SortedEnum): Observable<any> {
     console.log("get my task start");
 
     this.newTasks = [];
     this.inProgresTasks = [];
     this.completedTasks = [];
 
-    return this.taskService.getMyTasks().pipe(
+    return this.taskService.getMyTasks(sorted).pipe(
       tap((response: any) => {
         if (response) {
           response.forEach((element: { id: number; name: string; state: string; subtasks: Subtask[] }) => {
@@ -128,85 +137,20 @@ export class HomePageComponent implements OnInit {
 
   }
 
-  changeIdGetName(event: Event): void {
-    const target = event.target as HTMLInputElement;
 
-    const value: number = parseInt(target.value);
-    if (value != null) {
-      this.disableId = false;
-      this.numberGetName = value;
-    } else {
-      this.disableId = true;
-    }
-  }
-
-  changeName(event: Event): void {
-    const target = event.target as HTMLInputElement;
-
-    const value = target.value;
-
-    if (value.length > 0) {
-      this.disable = false;
-      this.newName = value;
-    }
-  }
-
-  addNewName(input: HTMLInputElement): void {
-
-    const userData = {
-      name: this.newName
-
-    };
-    console.log(this.newName + "- this new task");
-
-
-    this.http.post<any>("http://localhost:7000/api/tasks", userData).subscribe(
-      (response: any) => {
-        this.name = response.name;
-        this.idName = response.id;
-        this.newName = "";
-        this.disable = true;
-        input.value = "";
-        this.refreshTasks;
-      },
-      (error: any) => {
-        // Обработка ошибок, если необходимо
-        console.error("Error:", error);
-      }
-    );
-  }
-
-  getName(input: HTMLInputElement): void {
-    if (this.numberGetName != null) {
-      this.http.get<any>("http://localhost:7000/api/tasks/" + this.numberGetName).subscribe(
-
-        (response: any) => {
-          this.name = response.name;
-          this.idName = response.id;
-          this.disableId = true;
-          input.value = "";
-        }
-      )
-
-        ;
-    }
-
-  }
 
 
   updateTaskStatus(id: number): void {
     const newStatus = this.selectedStatus[id];
     console.log("your id" + id);
     console.log("your new status" + newStatus);
-
-    this.http.patch<any>("http://localhost:7000/api/tasks/" + id + "?taskState=" + newStatus, "").subscribe(
-
+    this.taskService.changeTaskStatus(id, newStatus).subscribe(
       (response: any) => {
         console.log("your new id" + response.id);
         console.log("your new status" + response.status);
         this.name = response.name;
         this.idName = response.id;
-        this.refreshTasks();
+        this.refreshTasks(this.sorted);
       }
     )
       ;
@@ -214,14 +158,17 @@ export class HomePageComponent implements OnInit {
 
 
   openTaskDialog(task: Task): void {
-    console.log(task.name);
 
     const dialogRef = this.dialog.open(TaskDialogComponent, {
       width: "560px",
       height: "500px"
     })
 
-    dialogRef.componentInstance.initTask(task)
+    dialogRef.componentInstance.initTask(task);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.refreshTasks(this.sorted);
+    });
   }
 
   changeDisable(): void {
@@ -229,15 +176,13 @@ export class HomePageComponent implements OnInit {
   }
 
   addTask(): void {
-    console.log("add task start");
-
     const dialogRef = this.dialog.open(AddDialogComponent, {
       width: "400px",
       height: "200px"
     })
 
     dialogRef.afterClosed().subscribe(result => {
-      this.refreshTasks(); // Вызываем метод обновления подзадач после закрытия диалога
+      this.refreshTasks(this.sorted);
     });
 
   }
@@ -276,5 +221,30 @@ export class HomePageComponent implements OnInit {
     this.pageSizeCompletedTask = event.pageSize;
     this.pageCompletedTask = event.pageIndex;
     this.updatePaginatedCompletedTasks();
+  }
+
+  sortTasks(sort: string) {
+
+    switch (sort) {
+      case "DATE_UP":
+        this.refreshTasks(SortedEnum.DATE_UP)
+        break;
+      case "DATE_DOWN":
+        this.refreshTasks(SortedEnum.DATE_DOWN)
+        break;
+      case "STATE_UP":
+        this.refreshTasks(SortedEnum.STATE_UP)
+        break;
+      case "STATE_DOWN":
+        this.refreshTasks(SortedEnum.STATE_DOWN)
+        break;
+      case "NAME_UP":
+        this.refreshTasks(SortedEnum.NAME_UP)
+        break;
+      case "NAME_DOWN":
+        this.refreshTasks(SortedEnum.NAME_DOWN)
+        break;
+    }
+
   }
 }

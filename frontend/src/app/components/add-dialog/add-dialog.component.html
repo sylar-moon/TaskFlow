@@ -3,8 +3,9 @@
   </button> 
 
 <div class="text">
-    <p *ngIf="isSubtask">Enter the new subtask name</p>
-    <p *ngIf="!isSubtask">Enter the new task name</p>
+    <p *ngIf="isSubtask&&!isEditTask">Enter the new subtask name</p>
+    <p *ngIf="!isSubtask&&!isEditTask">Enter the new task name</p>
+    <p *ngIf="isEditTask">Edit the name task: {{taskNameForEdit}}</p>
 
 </div>
 
@@ -13,10 +14,13 @@
 
 
 <div class="buttons">
-    <button class="button" *ngIf="!isSubtask" (click)="addNewTask(nameInput) "
+    <button class="button" *ngIf="!isSubtask&&!isEditTask" (click)="addNewTask(nameInput) "
      [disabled]="isEmpty">Add task</button>
 
-    <button class="button" *ngIf="isSubtask" (click)="addNewSubtask(nameInput)" 
+     <button class="button" *ngIf="isEditTask" (click)="editTaskName(nameInput) "
+     [disabled]="isEmpty">Edit task</button>
+
+    <button class="button" *ngIf="isSubtask&&!isEditTask" (click)="addNewSubtask(nameInput)" 
     [disabled]="isEmpty">Add
         subtask</button>
 </div>

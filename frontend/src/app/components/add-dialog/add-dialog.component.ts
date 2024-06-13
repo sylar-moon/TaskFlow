@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogRef } from '@angular/material/dialog';
+import { response } from 'express';
 
 @Component({
   selector: 'app-add-subtask-dialog',
@@ -16,16 +17,26 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class AddDialogComponent {
   taskId = 0;
   isEmpty = true;
-  newName = ""
+  taskNameForAdd = ""
+  taskNameForEdit = "";
   isSubtask = false
+  isEditTask = false
 
   constructor(private subtaskServise: SubtaskService, private taskService: TaskService,
     private dialogRef: MatDialogRef<AddDialogComponent>
-    ) { }
+  ) { }
 
-  initTaskId(id: number): void {
+  initForAddSubtask(id: number): void {
     this.taskId = id
     this.isSubtask = true;
+  }
+
+  initForChangeName(name: string,id:number): void {
+    this.taskId = id
+    this.isEditTask = true;
+    console.log("task name - " + name);
+    this.taskNameForEdit = name;
+
   }
 
   changeName(event: Event): void {
@@ -35,14 +46,14 @@ export class AddDialogComponent {
 
     if (value.length > 0) {
       this.isEmpty = false;
-      this.newName = value;
+      this.taskNameForAdd = value;
     }
   }
 
   addNewSubtask(input: HTMLInputElement): void {
-    console.log("add new sub start" + this.newName);
+    console.log("add new sub start" + this.taskNameForAdd);
 
-    this.subtaskServise.addNewSubtask(this.newName, this.taskId).subscribe(
+    this.subtaskServise.addNewSubtask(this.taskNameForAdd, this.taskId).subscribe(
       (response: any) => {
         console.log("subtask add");
         console.log(response.name + "task name");
@@ -61,9 +72,9 @@ export class AddDialogComponent {
   }
 
   addNewTask(input: HTMLInputElement): void {
-    console.log("add new sub start" + this.newName);
+    console.log("add new sub start" + this.taskNameForAdd);
 
-    this.taskService.addNewTask(this.newName).subscribe(
+    this.taskService.addNewTask(this.taskNameForAdd).subscribe(
       (response: any) => {
         console.log("task add");
         console.log(response.name + "task name");
@@ -81,9 +92,19 @@ export class AddDialogComponent {
 
   }
 
-  close():void{
+  close(): void {
     console.log("close");
     this.dialogRef.close();
+
+  }
+
+  editTaskName(input: HTMLInputElement): void {
+    this.taskService.changeTaskName(this.taskId, input.value).subscribe((response) => {
+
+      this.dialogRef.close(input.value);
+    })
+
+
 
   }
 }

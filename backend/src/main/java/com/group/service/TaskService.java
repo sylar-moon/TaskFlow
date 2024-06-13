@@ -1,20 +1,16 @@
 package com.group.service;
 
-import com.group.dto.AddSubtaskDTO;
-import com.group.dto.SendMessageDTO;
 import com.group.dto.TaskDTO;
-import com.group.entity.SubTaskEntity;
 import com.group.entity.TaskEntity;
+import com.group.enumeration.SortedEnum;
 import com.group.enumeration.StateEnum;
 import com.group.exception.TaskNotFoundException;
 import com.group.exception.TaskValidateException;
 import com.group.repository.SubTaskRepository;
 import com.group.repository.TaskRepository;
 import com.group.util.TaskStateValidator;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,19 +25,17 @@ public class TaskService {
 
     private final TaskStateValidator stateValidator;
 
-    private final EmailSenderService senderService;
 
     @Autowired
     public TaskService(TaskRepository taskRepository, TaskStateValidator stateValidator,
-                       SubTaskRepository subTaskRepository, EmailSenderService senderService) {
+                       SubTaskRepository subTaskRepository) {
         this.taskRepository = taskRepository;
         this.stateValidator = stateValidator;
         this.subTaskRepository = subTaskRepository;
-        this.senderService = senderService;
     }
 
-    public TaskDTO saveTask (TaskEntity task){
-       return getTaskDTO(taskRepository.save(task));
+    public TaskDTO saveTask(TaskEntity task) {
+        return getTaskDTO(taskRepository.save(task));
     }
 
     public TaskDTO addTask(String name, Long personId) {
@@ -70,12 +64,12 @@ public class TaskService {
     }
 
 
-    public List<TaskDTO> getMyTasks(long personId) {
-        log.info("your person id: {}",personId);
-        List<TaskEntity> tasks = taskRepository.findAllByPersonId(personId).
-                orElse(new ArrayList<>());
-        tasks.forEach(s-> log.info("Your task: {}",s));
-        return tasks.stream().map(TaskService::getTaskDTO).collect(Collectors.toList());
+    public List<TaskDTO> getMyTasks(long personId, SortedEnum sort) {
+        return taskRepository.findAllByPersonId(personId).
+                orElse(new ArrayList<>()).stream()
+                .sorted(getComparator(sort))
+                .map(TaskService::getTaskDTO)
+                .collect(Collectors.toList());
     }
 
     public TaskDTO getTaskById(long id) {
@@ -89,4 +83,42 @@ public class TaskService {
                         String.format("Task with id %d was not found", id)));
     }
 
+    public TaskDTO changeTaskName(Long id, String newName) {
+        TaskEntity entity = tryGetTaskEntity(id);
+        log.info("get task complete");
+        entity.setName(newName);
+        log.info("set task complete");
+
+        return saveTask(entity);
+    }
+
+    public List<TaskDTO> getMyClosedTasks(long id, SortedEnum sort) {
+
+        return taskRepository.findAllByPersonId(id).
+                orElse(new ArrayList<>())
+                .stream()
+                .filter(task -> task.getState() == StateEnum.CLOSED)
+                .sorted(getComparator(sort))
+                .map(TaskService::getTaskDTO)
+                .collect(Collectors.toList());
+    }
+
+    private Comparator<TaskEntity> getComparator(SortedEnum sort) {
+        switch (sort) {
+            case NAME_UP:
+                return Comparator.comparing(TaskEntity::getName);
+            case NAME_DOWN:
+                return Comparator.comparing(TaskEntity::getName).reversed();
+            case DATE_UP:
+                return Comparator.comparing(TaskEntity::getDateTimeCreate); // Предполагается, что у TaskEntity есть метод getDate
+            case DATE_DOWN:
+                return Comparator.comparing(TaskEntity::getDateTimeCreate).reversed(); // Предполагается, что у TaskEntity есть метод getDate
+            case STATE_UP:
+                return Comparator.comparing(TaskEntity::getState);
+            case STATE_DOWN:
+                return Comparator.comparing(TaskEntity::getState).reversed();
+            default:
+                throw new IllegalArgumentException("Invalid sorting option");
+        }
+    }
 }

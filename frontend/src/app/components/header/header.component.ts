@@ -1,6 +1,8 @@
 import { Component, type OnInit } from '@angular/core';
 import { UserService } from '../../sercices/user.service';
 import { User } from '../../models/user.model';
+import { Router, ActivatedRoute} from '@angular/router';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -19,7 +21,9 @@ export class HeaderComponent implements OnInit {
     this.initUserInfo();
   }
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService,   
+     private router: Router
+  ) { }
 
   initUserInfo(): void {
 
@@ -40,5 +44,18 @@ export class HeaderComponent implements OnInit {
     })
   }
 
+  openClosedTasks():void{
+    this.router.navigate(['/closed-tasks']);
 
+  }
+
+  openHomePage():void{
+    this.router.navigate(['/']);
+
+  }
+
+  openAllTasks():void{
+    this.router.navigate(['/all-tasks']);
+
+  }
 }

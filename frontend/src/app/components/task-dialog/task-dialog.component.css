@@ -1,37 +1,36 @@
-.text{
-/* border: 1px solid coral;  */
-height: 25px;
-border-radius: 5px;
-text-align: center;
-align-items: center;
-padding: 10px;
-margin: 0px;   
-cursor: default;
+.text {
+    /* border: 1px solid coral;  */
+    height: 25px;
+    border-radius: 5px;
+    text-align: center;
+    align-items: center;
+    padding: 10px;
+    margin: 0px;
+    cursor: default;
 }
 
-.checkBox{
+.checkBox {
     cursor: pointer;
 }
 
-.subtasks{
+.subtasks {
     width: 555px;
     height: 450px;
-    border: 1px solid coral; 
     /* padding: 19px; */
     cursor: default;
 
 }
 
-.subtasksInfo{
+.subtasksInfo {
     margin-left: 7px;
     margin-top: 7px;
 }
 
-.addSubtask{
+.addSubtask {
     color: whitesmoke;
     background-color: darkcyan;
     margin-top: 6px;
-    margin-left: 525px;
+    margin-left: 8px;
     width: 20px;
     height: 20px;
     min-width: 20px;
@@ -41,5 +40,74 @@ cursor: default;
 
 .addSubtask .mat-icon {
     margin-top: 4px;
-    font-size: 20px; /* Настройте размер значка */
-  }
+    font-size: 20px;
+    /* Настройте размер значка */
+}
+
+
+
+.close {
+
+    background-color: rgb(252, 66, 66);
+    margin-left: 8px;
+
+    margin-top: 6px;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    line-height: 20px;
+}
+
+.close .mat-icon {
+    margin-top: 4px;
+    font-size: 20px;
+    /* Настройте размер значка */
+}
+
+
+
+.edit {
+
+    background-color: rgb(250, 199, 46);
+    margin-left: 460px;
+    display: flex;
+    align-items: center;
+    /* Вертикальное выравнивание по центру */
+    justify-content: center;
+    /* Горизонтальное выравнивание по центру */
+    margin-top: 6px;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    border-radius: 50%;
+    /* Делает изображение круглым */
+    overflow: hidden;
+    line-height: 20px;
+
+}
+
+.edit .mat-icon {
+    margin-top: 3px;
+    font-size: 16px;
+    /* Настройте размер значка */
+    color: azure;}
+
+    .edit button.mat-icon-button {
+        box-shadow: none;
+        /* Убираем тень */
+        padding: 0;
+        /* Убираем внутренние отступы */
+    }
+
+    .edit button.mat-icon-button:hover,
+    .edit button.mat-icon-button:focus {
+        box-shadow: none;
+        /* Убираем тень при наведении и фокусе */
+    }
+
+
+    .buttons {
+        display: flex;
+    }

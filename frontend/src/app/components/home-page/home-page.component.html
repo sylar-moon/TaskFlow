@@ -5,12 +5,44 @@
         <div class="tasksCard">
 
             <div class="tasks">
-
-
-
-                <button class="addTask" mat-mini-fab (click)="addTask()">
+<div class="buttons">
+    <div class="sortButton">
+        <button tabindex="-1" mat-icon-button [autofocus]="false" type="button" [matMenuTriggerFor]="sortMenu"
+                [ngClass]="{'mat-mdc-menu-trigger': false,
+                            'mat-mdc-icon-button': false,
+                            'mat-unthemed': false,
+                            'mat-mdc-button-base': false}">
+          <mat-icon>sort</mat-icon>
+        </button>
+        <mat-menu #sortMenu="matMenu">
+          <button mat-menu-item (click)="sortTasks('NAME_UP')">
+            <mat-icon>arrow_upward</mat-icon>
+            <span>Sort by Name (Ascending)</span>
+          </button>
+          <button mat-menu-item (click)="sortTasks('NAME_DOWN')">
+            <mat-icon>arrow_downward</mat-icon>
+            <span>Sort by Name (Descending)</span>
+          </button>
+          <button mat-menu-item (click)="sortTasks('DATE_UP')">
+            <mat-icon>arrow_upward</mat-icon>
+            <span>Sort by Date (Ascending)</span>
+          </button>
+          <button mat-menu-item (click)="sortTasks('DATE_DOWN')">
+            <mat-icon>arrow_downward</mat-icon>
+            <span>Sort by Date (Descending)</span>
+          </button>
+        </mat-menu>
+      </div>
+      
+ <button class="addTask" mat-mini-fab (click)="addTask()">
                     <mat-icon>add</mat-icon>
                 </button>
+</div>
+
+  
+  
+
+               
                 <p class="nameStateNewTasks">New tasks</p>
 
                 <li class="task" *ngFor="let item of paginatedNewTasks" (click)="openTaskDialog(item)">{{ item.name }}

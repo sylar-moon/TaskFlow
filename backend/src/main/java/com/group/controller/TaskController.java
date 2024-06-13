@@ -1,21 +1,16 @@
 package com.group.controller;
 
-import com.group.dto.AddSubtaskDTO;
-import com.group.dto.AddTaskDTO;
+import com.group.dto.TaskNameDTO;
 import com.group.dto.TaskDTO;
-import com.group.entity.PersonEntity;
+import com.group.enumeration.SortedEnum;
 import com.group.enumeration.StateEnum;
-import com.group.exception.TaskNotFoundException;
 import com.group.service.PersonService;
 import com.group.service.TaskService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -46,20 +41,30 @@ public class TaskController {
 
 
     @GetMapping("/my")
-    public ResponseEntity<List<TaskDTO>> getMyTasks() {
-        return ResponseEntity.ok(taskService.getMyTasks(personService.getAuthPersonEntity().getId()));
+    public ResponseEntity<List<TaskDTO>> getMyTasks(@RequestParam SortedEnum sortedTask) {
+        return ResponseEntity.ok(taskService.getMyTasks(personService.getAuthPersonEntity().getId(),sortedTask));
+    }
+    @GetMapping("/closed")
+    public ResponseEntity<List<TaskDTO>> getMyClosedTasks(@RequestParam SortedEnum sortedTask) {
+        return ResponseEntity.ok(taskService.getMyClosedTasks(personService.getAuthPersonEntity().getId(),sortedTask));
     }
 
 
     @PostMapping
-    public ResponseEntity<TaskDTO> addTask(@RequestBody AddTaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskNameDTO taskDTO) {
         return ResponseEntity.ok(taskService.addTask(taskDTO.name(),
                 personService.getAuthPersonEntity().getId()));
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("{id}/state")
     public ResponseEntity<TaskDTO> changeTaskState(@PathVariable Long id, @RequestParam StateEnum taskState) {
         return ResponseEntity.ok(taskService.changeTaskState(id, taskState));
+    }
+
+    @PatchMapping("{id}/name")
+    public ResponseEntity<TaskDTO> changeTaskName(@PathVariable Long id, @RequestBody TaskNameDTO taskDTO) {
+       log.info("change name start");
+        return ResponseEntity.ok(taskService.changeTaskName(id, taskDTO.name()));
     }
 
 }

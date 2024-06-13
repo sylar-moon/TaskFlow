@@ -1,10 +1,26 @@
 <p class="text">    Subtasks for task:  {{nameTask}}</p>
 <div class="subtasks">
 
+<div class="buttons">
 
-       <button class="addSubtask" mat-mini-fab  (click)="addTask()">
+  <div class="edit">
+    <button mat-icon-button (click)="editTask()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div> 
+  
+ <button class="addSubtask" mat-mini-fab  (click)="addTask()">
         <mat-icon>add</mat-icon>
       </button> 
+
+      <button class="close" mat-mini-fab  (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+
+
+      
+</div>
+      
     
 
     <div class="subtasksInfo">

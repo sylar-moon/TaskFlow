@@ -1,10 +1,10 @@
 <div class="header">
 
-    <img class="logo" src="assets/Logo.png" alt="logo">
+    <img class="logo"   src="assets/Logo.png" (click)="openHomePage()" alt="logo">
 
     <div class="buttons">
-        <button class="button">Current tasks</button>
-        <button class="button">All tasks</button>
+        <button class="button" (click)="openClosedTasks()">Closed tasks</button>
+        <button class="button" (click)="openAllTasks()">All tasks</button>
         <button class="button">Find task</button>
 
     </div>

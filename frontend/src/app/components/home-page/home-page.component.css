@@ -1,5 +1,4 @@
-
-.firstLine{
+.firstLine {
     margin-bottom: 30px;
     display: flex;
     flex-direction: row;
@@ -7,42 +6,43 @@
     justify-content: center;
 }
 
-.card{
+.card {
     margin: 20px;
     display: grid;
     place-items: center;
     height: 120px;
     width: 200px;
-    padding: 10px ;
-    border: 1px solid black; /* Правильный порядок: ширина, стиль, цвет */
+    padding: 10px;
+    border: 1px solid black;
     border-radius: 10px;
 }
 
 
 
-.info{
-    border: 1px solid black; 
+.info {
+    border: 1px solid black;
     width: 400px;
     display: block;
     margin: 0;
     text-align: left;
 }
 
-.name{
+.name {
     margin-left: 10px;
     font-size: 30px;
     font-style: italic;
     color: blue;
 }
 
-.button{
+.button {
     border-color: aqua;
     border-radius: 5px;
     font-size: 20px;
-    display: block; margin-top: 10px; 
+    display: block;
+    margin-top: 10px;
 }
 
-.nameState{
+.nameState {
     text-align: center;
     font-size: 25px;
     font-style: italic;
@@ -50,7 +50,7 @@
     cursor: default;
 }
 
-.nameStateNewTasks{
+.nameStateNewTasks {
     text-align: center;
     font-size: 25px;
     font-style: italic;
@@ -59,45 +59,47 @@
     margin-top: -5px;
 }
 
-.allTask{
-display: flex;
+.allTask {
+    display: flex;
 
 }
 
-.tasks  {
-    height: 450px;
-   min-width: 350px;
-   max-width: 620px;
-    border: 1px solid coral; 
+.tasks {
+    height: 440px;
+    min-width: 350px;
+    max-width: 620px;
+    border: 1px solid coral;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 15px;
     border-radius: 10px;
     background-color: lemonchiffon;
-  }
+}
 
-.task{
-     cursor: pointer;
-     margin-left: 12px;
-     margin-right: 12px;
-     margin-bottom: 12px;
+.task {
+    cursor: pointer;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-bottom: 12px;
 }
 
 .allTask li {
-    /* border: 1px solid coral;  */
     display: flex;
     align-items: center;
-    margin-bottom: 5px; 
-  }
+    margin-bottom: 5px;
+}
 
-  .choseState {
+.choseState {
     margin-left: auto;
     display: flex;
     align-items: flex-end;
-  }
+}
 
+.buttons {
+    display: flex;
+}
 
-  .addTask{
+.addTask {
     color: whitesmoke;
     background-color: darkcyan;
     display: flex;
@@ -113,36 +115,45 @@ display: flex;
     line-height: 20px;
 }
 
+.sortButton {
+    color: darkcyan;
+    display: flex;
+    margin-left: auto;
+    margin-right: -276px;
+    margin-top: 2px;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    line-height: 20px;
+
+}
+
 .addTask .mat-icon {
     margin-top: 4px;
-    font-size: 20px; /* Настройте размер значка */
-  }  
+    font-size: 20px;
+}
 
 
-  .tasksCard{
+.tasksCard {
     display: table;
     align-items: end;
     margin-left: auto;
     margin-right: auto;
-  }
+}
 
-  /* .tasksCard .extended-paginator .paginator {
-    width: 550px !important;
-} */
+
 ::ng-deep .paginator {
     max-width: 320px;
     font-size: 12px;
-    
-  }
-  
-  ::ng-deep .mat-mdc-paginator-page-size-label {
+
+}
+
+::ng-deep .mat-mdc-paginator-page-size-label {
     display: none;
-  }
+}
 
- ::ng-deep .mat-mdc-paginator-page-size{
-    
-   width: 66px;
- }
-  
+::ng-deep .mat-mdc-paginator-page-size {
 
- 
+    width: 66px;
+}
